@@ -15,7 +15,7 @@ RUN \
 	add-apt-repository -y ppa:nginx/stable && \
 	add-apt-repository -y ppa:rwky/graphicsmagick && \
 	apt-get update && \
-	apt-get -y install nginx mysql-server mysql-client php7.1-fpm php7.1-mysql php7.1-curl php7.1-mcrypt graphicsmagick ffmpeg pwgen wget unzip
+	apt-get -y install nginx mysql-client php7.1-fpm php7.1-mysql php7.1-curl php7.1-mcrypt graphicsmagick ffmpeg pwgen wget unzip
 
 # Configuration
 RUN \
@@ -38,7 +38,6 @@ ADD ./conf/nginx-site.conf /etc/nginx/sites-available/default
 
 # Add runit files for each service
 ADD ./services/nginx /etc/service/nginx/run
-ADD ./services/mysql /etc/service/mysql/run
 ADD ./services/php-fpm /etc/service/php-fpm/run
 ADD ./services/koken /etc/service/koken/run
 
@@ -56,17 +55,16 @@ ADD ./shell/start.sh /etc/my_init.d/001_koken.sh
 # Execute permissions where needed
 RUN \
 	chmod +x /etc/service/nginx/run && \
-	chmod +x /etc/service/mysql/run && \
 	chmod +x /etc/service/php-fpm/run && \
 	chmod +x /etc/service/koken/run && \
 	chmod +x /etc/cron.daily/koken && \
 	chmod +x /etc/my_init.d/001_koken.sh
 
 # Data volumes
-VOLUME ["/usr/share/nginx/www", "/var/lib/mysql"]
+VOLUME ["/usr/share/nginx/www"]
 
-# Expose 8080 to the host
-EXPOSE 8080
+# Expose 80 to the host
+EXPOSE 80
 
 # Disable SSH
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
