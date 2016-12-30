@@ -28,6 +28,7 @@ RUN \
 	sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.1/fpm/php-fpm.conf && \
 	sed -i -e "s/;pm.max_requests\s*=\s*500/pm.max_requests = 500/g" /etc/php/7.1/fpm/pool.d/www.conf && \
 	echo "env[KOKEN_HOST] = 'koken-docker-lemp'" >> /etc/php/7.1/fpm/pool.d/www.conf && \
+	echo "env[DATABASE_URL] = \$DATABASE_URL" >> /etc/php/7.1/fpm/pool.d/www.conf && \
 	cp /etc/php/7.1/fpm/pool.d/www.conf /etc/php/7.1/fpm/pool.d/images.conf && \
 	sed -i -e "s/\[www\]/[images]/" /etc/php/7.1/fpm/pool.d/images.conf && \
 	sed -i -e "s#listen\s*=\s*/run/php/php7\.1-fpm\.sock#listen = /run/php/php7.1-fpm-images.sock#" /etc/php/7.1/fpm/pool.d/images.conf && \
